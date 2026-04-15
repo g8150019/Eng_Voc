@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>英文單字挑戰賽</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
+        .quiz-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h1 { text-align: center; color: #333; }
+        .question { margin-bottom: 20px; font-size: 1.2rem; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        button.option { padding: 12px; border: 1px solid #ddd; border-radius: 6px; background: #fff; cursor: pointer; transition: 0.3s; text-align: left; }
+        button.option:hover { background: #e9ecef; }
+        #score-board { display: none; text-align: center; }
+        .restart-btn { margin-top: 20px; padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>單字測驗</h1>
+    
+    <div id="quiz-content">
+        <div class="question" id="question-text">載入中...</div>
+        <div class="options" id="options-container"></div>
+    </div>
+
+    <div id="score-board">
+        <h2>測驗結束！</h2>
+        <p id="final-score" style="font-size: 2rem; font-weight: bold; color: #007bff;"></p>
+        <button class="restart-btn" onclick="location.reload()">重新挑戰</button>
+    </div>
+</div>
+
+<script>
+    // 這裡可以自定義你的題庫 [題目, 正確答案, 選項A, 選項B, 選項C, 選項D]
+    const questions = [
+        { q: "「Apple」的中文是什麼？", a: "蘋果", options: ["香蕉", "蘋果", "西瓜", "草莓"] },
+        { q: "「Computer」的中文是什麼？", a: "電腦", options: ["電視", "電話", "電腦", "相機"] },
+        { q: "「Library」的中文是什麼？", a: "圖書館", options: ["公園", "圖書館", "電影院", "醫院"] },
+        { q: "「Beautiful」的中文是什麼？", a: "美麗的", options: ["醜陋的", "美麗的", "快速的", "安靜的"] },
+        { q: "「Success」的中文是什麼？", a: "成功", options: ["失敗", "努力", "成功", "放棄"] }
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const qData = questions[currentIdx];
+        document.getElementById('question-text').textContent = `第 ${currentIdx + 1} 題：${qData.q}`;
+        
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+        
+        qData.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option';
+            btn.textContent = opt;
+            btn.onclick = () => checkAnswer(opt);
+            container.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selected) {
+        if (selected === questions[currentIdx].a) {
+            score += 20; // 每題 20 分
+        }
+        
+        currentIdx++;
+        
+        if (currentIdx < questions.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-content').style.display = 'none';
+        document.getElementById('score-board').style.display = 'block';
+        document.getElementById('final-score').textContent = `得分：${score} / 100`;
+    }
+
+    // 初始化第一題
+    loadQuestion();
+</script>
+
+</body>
+</html>
